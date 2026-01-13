@@ -2,6 +2,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
+import { AppRoutes } from './AppRoutes';
+import { AuthProvider } from './auth/Authprovider';
+
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -11,6 +17,10 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+  <AuthProvider>
+  <Router>
+            <AppRoutes />
+          </Router>
+  </AuthProvider>
   </React.StrictMode>
 );

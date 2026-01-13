@@ -1,10 +1,16 @@
 
 import React, { useState } from 'react';
 import type { FormData, MealPlanResponse } from './types';
-import { INITIAL_FORM_STATE, TRANSLATIONS } from './constants';
+import { INITIAL_FORM_STATE } from './constants';
 import UserInputForm from './components/UserInputForm';
 import MealPlanDisplay from './components/MealPlanDisplay';
 import { generateMealPlan } from './services/geminiService';
+import {LogOut } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { logout } from './api/v1/v1';
+
+
+
 
 const App: React.FC = () => {
     const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
@@ -12,15 +18,10 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Derived language from formData
-    const language = formData.language || 'en';
-    const t = TRANSLATIONS[language];
-
     const handleFormSubmit = async (data: FormData) => {
         setIsLoading(true);
         setError(null);
         setMealPlan(null);
-        setFormData(data); // Sync state back from form
         try {
             const plan = await generateMealPlan(data);
             setMealPlan(plan);
@@ -50,7 +51,7 @@ const App: React.FC = () => {
                                 e.g. src="/logo.png" or a base64 string.
                              */}
                             <img 
-                                src="https://assets.cdn.filesafe.space/Zm5F1ZUDkepScHsmkXKM/media/69649136f8a93bf628e3c977.png" 
+                                src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=100&h=100" 
                                 alt="F&C Logo" 
                                 className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
                             />
@@ -60,14 +61,15 @@ const App: React.FC = () => {
                                 Fuel & <span className="text-lime-400">Conquer</span>
                             </h1>
                             <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">
-                                {t.headers.appSubtitle}
+                                Meal Architect
                             </p>
                         </div>
                     </div>
                     <div className="hidden lg:block">
-                        <span className="px-3 py-1 bg-slate-800 rounded-full text-xs font-bold text-slate-300 border border-slate-700">
-                            High-Performance Nutrition
-                        </span>
+                     
+                        <Button onClick={logout} variant="outline" size="icon">
+                        <LogOut />
+                        </Button>
                     </div>
                 </div>
             </header>
@@ -76,8 +78,8 @@ const App: React.FC = () => {
                 {!mealPlan && !isLoading && !error && (
                     <div className="max-w-4xl mx-auto">
                         <div className="mb-8 text-center">
-                            <h2 className="text-3xl font-extrabold text-slate-800">{t.headers.heroTitle}</h2>
-                            <p className="text-slate-500 mt-2">{t.headers.heroSubtitle}</p>
+                            <h2 className="text-3xl font-extrabold text-slate-800">Precision Fueling Starts Here</h2>
+                            <p className="text-slate-500 mt-2">Enter your stats to build your custom low-carb, high-protein roadmap.</p>
                         </div>
                         <UserInputForm
                             initialData={formData}
@@ -92,30 +94,30 @@ const App: React.FC = () => {
                             <div className="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
                             <div className="absolute inset-0 border-4 border-lime-400 border-t-transparent rounded-full animate-spin"></div>
                         </div>
-                        <h2 className="mt-8 text-3xl font-black text-slate-900 italic uppercase">{t.headers.loadingTitle}</h2>
-                        <p className="mt-2 text-slate-500 font-medium">{t.headers.loadingSubtitle}</p>
+                        <h2 className="mt-8 text-3xl font-black text-slate-900 italic uppercase">Engineering Your Plan...</h2>
+                        <p className="mt-2 text-slate-500 font-medium">Calibrating macros for maximum performance.</p>
                     </div>
                 )}
                 
                 {error && (
                      <div className="p-12 bg-white rounded-xl shadow-xl text-center border-t-4 border-red-500">
-                        <h2 className="text-3xl font-black text-red-600 italic uppercase">{t.headers.errorTitle}</h2>
+                        <h2 className="text-3xl font-black text-red-600 italic uppercase">System Alert</h2>
                         <p className="mt-4 text-slate-600 font-medium">{error}</p>
                         <button
                             onClick={handleReset}
                             className="mt-8 px-8 py-3 bg-slate-900 text-white font-bold rounded-lg shadow-lg hover:bg-black transition-colors focus:outline-none focus:ring-2 focus:ring-lime-400"
                         >
-                            {t.headers.resetBtn}
+                            Reset & Try Again
                         </button>
                     </div>
                 )}
 
                 {mealPlan && (
-                    <MealPlanDisplay plan={mealPlan} onReset={handleReset} language={language} />
+                    <MealPlanDisplay plan={mealPlan} onReset={handleReset} />
                 )}
             </main>
             <footer className="py-8 text-center text-slate-500 text-xs font-bold uppercase tracking-widest border-t border-slate-200 mt-12">
-                <p>&copy; {new Date().getFullYear()} Fuel & Conquer. {t.headers.footer}</p>
+                <p>&copy; {new Date().getFullYear()} Fuel & Conquer. Rewire your habits. Conquer your goals.</p>
             </footer>
         </div>
     );
